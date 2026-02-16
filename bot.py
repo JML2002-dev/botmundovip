@@ -17,21 +17,22 @@ from telegram.ext import (
 # =========================
 
 TOKEN = os.getenv("TOKEN")
-print("TOKEN CARGADO:", TOKEN)
 VIP_GROUP_ID = -1003665882219
 ADMIN_GROUP_ID = -1003773189699
 
-PRECIO_YAPE = "S/ 10 soles"
+PRECIO_YAPE = "S/ 10"
 PRECIO_PAYPAL = "$4 USD"
-PAYPAL_LINK = "paypal.me/JovaMart"
+PAYPAL_LINK = "https://paypal.me/JovaMart"
+
 YAPE_QR = "yape.jpg"
+PROMO_IMG = "promo.jpg"
 
 logging.basicConfig(level=logging.INFO)
 
 usuarios_estado = {}
 
 # =========================
-# TECLADO PRINCIPAL
+# TECLADO
 # =========================
 
 def teclado_principal():
@@ -43,7 +44,7 @@ def teclado_principal():
     ])
 
 # =========================
-# START
+# START (ENVÍA IMAGEN)
 # =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -52,40 +53,24 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     mensaje = (
         "🔥 *Bienvenido a Mundo VIP* 🔥\n\n"
-        "Aquí obtendrás acceso exclusivo con contenido VIP actualizado constantemente.\n\n"
+        "Accede a nuestro contenido exclusivo actualizado constantemente.\n\n"
         "💎 Acceso permanente\n"
         "🔒 Grupo privado\n"
-        "🔒 100% respaldado y libre de caidas\n"
-        "⚠️ Si eres sensible mejor ni ingreses\n\n"
-        "💀 El mejor contenido prohibido de todo Telegram solo en nuestro VIP \n\n"
-        "✅ Dormidas Reales\n\n"
-        "✅ Borrachas\n\n"
-        "✅ Violads 100% reales\n\n"
-        "✅ Colegialas\n\n"
-        "✅ Chibolitas\n\n"
-        "✅ Espiadas\n\n"
-        "✅ Omegle\n\n"
-        "✅ Trios y Cornudos\n\n"
-        "✅ Famosas Peruanas\n\n"
-        "✅ Streamers e influencers\n\n"
-        "✅ OnlyFans\n\n"
-        "✅ Sexmex\n\n"
-        "✅ Packs Filtrados reales\n\n"
-        "✅ Packs Filtrados reales\n\n"
-        "Y mas seguimos con todas las actualizaciones\n\n"
-        "💷 Es un unico Pago\n\n"
-        "➡️ La proxima semana el precio de ingreso subira al doble por las actualizaciones\n\n"
+        "⚡ Activación rápida\n\n"
+        "💷 Pago único\n\n"
         "👇 Selecciona tu método de pago para continuar:"
     )
 
-    await update.message.reply_text(
-        mensaje,
-        reply_markup=teclado_principal(),
-        parse_mode="Markdown"
-    )
+    with open(PROMO_IMG, "rb") as foto:
+        await update.message.reply_photo(
+            photo=foto,
+            caption=mensaje,
+            reply_markup=teclado_principal(),
+            parse_mode="Markdown"
+        )
 
 # =========================
-# BOTONES
+# BOTONES DE PAGO
 # =========================
 
 async def botones(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -93,22 +78,29 @@ async def botones(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     user_id = query.from_user.id
+    estado = usuarios_estado.get(user_id)
+
+    # Evita duplicación
+    if estado == "esperando_comprobante":
+        return
+
     usuarios_estado[user_id] = "esperando_comprobante"
 
     if query.data == "yape":
-        await query.message.reply_photo(
-            photo=open(YAPE_QR, "rb"),
-            caption=(
-                f"💚 *Pago con Yape*\n\n"
-                f"Monto: {PRECIO_YAPE}\n\n"
-                "1️⃣ Realiza el pago.\n"
-                "2️⃣ Envía aquí la captura del comprobante.\n\n"
-                "Una vez confirmado recibirás tu acceso."
-            ),
-            parse_mode="Markdown"
-        )
+        with open(YAPE_QR, "rb") as qr:
+            await query.message.reply_photo(
+                photo=qr,
+                caption=(
+                    f"💚 *Pago con Yape*\n\n"
+                    f"Monto: {PRECIO_YAPE}\n\n"
+                    "1️⃣ Realiza el pago.\n"
+                    "2️⃣ Envía aquí la captura del comprobante.\n\n"
+                    "Tu acceso será activado una vez confirmado."
+                ),
+                parse_mode="Markdown"
+            )
 
-    if query.data == "paypal":
+    elif query.data == "paypal":
         await query.message.reply_text(
             (
                 f"🌎 *Pago con PayPal*\n\n"
@@ -158,8 +150,9 @@ async def recibir_comprobante(update: Update, context: ContextTypes.DEFAULT_TYPE
     usuarios_estado[user_id] = "pendiente"
 
     await update.message.reply_text(
-        "✅ Comprobante recibido correctamente.\n\n"
-        "Estamos verificando tu pago. Te avisaremos en breve."
+        "✅ Comprobante recibido.\n\n"
+        "Estamos verificando tu pago.\n"
+        "Te avisaremos en breve."
     )
 
 # =========================
@@ -185,50 +178,39 @@ async def admin_accion(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(
             chat_id=user_id,
             text=(
-                "🎉 *Pago confirmado con éxito*\n\n"
-                "Aquí tienes tu enlace de acceso al grupo VIP:\n"
+                "🎉 *Pago confirmado*\n\n"
+                "Aquí tienes tu acceso VIP:\n"
                 f"{enlace.invite_link}\n\n"
                 "⚠️ El enlace expira en 1 hora.\n"
-                "El acceso al grupo es permanente."
+                "El acceso es permanente."
             ),
             parse_mode="Markdown"
         )
 
-        await context.bot.send_message(
-            chat_id=ADMIN_GROUP_ID,
-            text=(
-                "✅ *PAGO APROBADO*\n\n"
-                f"🆔 Usuario ID: {user_id}\n"
-                "Enlace enviado correctamente."
-            ),
-            parse_mode="Markdown"
-        )
+        await query.message.reply_text("✅ PAGO APROBADO")
 
         usuarios_estado[user_id] = "aprobado"
         await query.message.delete()
 
-    if accion == "rechazar":
+    elif accion == "rechazar":
 
         await context.bot.send_message(
             chat_id=user_id,
             text=(
                 "❌ *Pago rechazado*\n\n"
-                "El comprobante no pudo ser validado.\n"
+                "El comprobante no pudo validarse.\n"
                 "Por favor envíalo nuevamente."
             ),
             parse_mode="Markdown"
         )
 
-        await context.bot.send_message(
-            chat_id=ADMIN_GROUP_ID,
-            text=f"❌ PAGO RECHAZADO\n🆔 Usuario ID: {user_id}"
-        )
+        await query.message.reply_text("❌ PAGO RECHAZADO")
 
         usuarios_estado[user_id] = "esperando_comprobante"
         await query.message.delete()
 
 # =========================
-# MENSAJES INTELIGENTES
+# MENSAJES
 # =========================
 
 async def mensajes(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -236,45 +218,36 @@ async def mensajes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     texto = update.message.text.lower()
 
-    if usuarios_estado.get(user_id) in ["esperando_comprobante", "pendiente"]:
+    estado = usuarios_estado.get(user_id)
+
+    if estado in ["esperando_comprobante", "pendiente"]:
         return
 
-    palabras_yape = ["yape", "pagar yape", "quiero yape"]
-    palabras_paypal = ["paypal", "pagar paypal"]
-    palabras_precio = ["precio", "cuanto", "vale", "costo"]
-    palabras_info = ["info", "información", "acceso", "grupo", "vip", "entrar"]
-
-    if any(p in texto for p in palabras_yape):
-        usuarios_estado[user_id] = "esperando_comprobante"
-        await update.message.reply_photo(
-            photo=open(YAPE_QR, "rb"),
-            caption=f"Paga {PRECIO_YAPE} vía Yape y envía la captura aquí."
-        )
-        return
-
-    if any(p in texto for p in palabras_paypal):
-        usuarios_estado[user_id] = "esperando_comprobante"
-        await update.message.reply_text(
-            f"Paga {PRECIO_PAYPAL} vía PayPal:\n{PAYPAL_LINK}\n\nEnvía la captura aquí."
-        )
-        return
-
-    if any(p in texto for p in palabras_precio):
+    if any(p in texto for p in ["precio", "cuanto", "vale", "costo"]):
         await update.message.reply_text(
             f"💎 Precio actual:\nYape: {PRECIO_YAPE}\nPayPal: {PRECIO_PAYPAL}",
             reply_markup=teclado_principal()
         )
         return
 
-    if any(p in texto for p in palabras_info):
+    if any(p in texto for p in ["yape"]):
+        usuarios_estado[user_id] = "esperando_comprobante"
+        with open(YAPE_QR, "rb") as qr:
+            await update.message.reply_photo(
+                photo=qr,
+                caption=f"Paga {PRECIO_YAPE} vía Yape y envía la captura."
+            )
+        return
+
+    if any(p in texto for p in ["paypal"]):
+        usuarios_estado[user_id] = "esperando_comprobante"
         await update.message.reply_text(
-            "🔥 Acceso VIP disponible.\nSelecciona método de pago:",
-            reply_markup=teclado_principal()
+            f"Paga {PRECIO_PAYPAL} vía PayPal:\n{PAYPAL_LINK}\n\nEnvía la captura."
         )
         return
 
     await update.message.reply_text(
-        "Para acceder al grupo VIP selecciona un método de pago:",
+        "Selecciona tu método de pago:",
         reply_markup=teclado_principal()
     )
 
@@ -291,13 +264,8 @@ def main():
     app.add_handler(MessageHandler(filters.PHOTO, recibir_comprobante))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, mensajes))
 
-    print("Bot Mundo VIP PRO 3.0 funcionando...")
+    print("🔥 Bot Mundo VIP PRO funcionando...")
     app.run_polling()
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
