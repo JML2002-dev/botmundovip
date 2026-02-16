@@ -72,10 +72,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "✅ Sexmex\n\n"
         "✅ Packs Filtrados reales\n\n"
         "✅ Packs Filtrados reales\n\n"
-        "Y mas Seguimos con todas las actualizaciones\n\n"
-        "Es un unico Pago\n\n"
-        "La proxima semana el precio de ingreso subira al doble por las aztualizaciones\n\n"
-        "Selecciona tu método de pago para continuar:"
+        "Y mas seguimos con todas las actualizaciones\n\n"
+        "💷 Es un unico Pago\n\n"
+        "➡️ La proxima semana el precio de ingreso subira al doble por las actualizaciones\n\n"
+        "👇 Selecciona tu método de pago para continuar:"
     )
 
     await update.message.reply_text(
@@ -296,6 +296,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
