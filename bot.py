@@ -23,7 +23,7 @@ ADMIN_GROUP_ID = -1003773189699
 
 PRECIO_YAPE = "S/ 10 soles"
 PRECIO_PAYPAL = "$4 USD"
-PAYPAL_LINK = "https://paypal.me/TUENLACE"
+PAYPAL_LINK = "paypal.me/JovaMart"
 YAPE_QR = "yape.jpg"
 
 logging.basicConfig(level=logging.INFO)
@@ -294,5 +294,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
