@@ -37,8 +37,8 @@ usuarios_estado = {}
 def teclado_principal():
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("💚 Pagar con Yape", callback_data="yape"),
-            InlineKeyboardButton("🌎 Pagar con PayPal", callback_data="paypal"),
+            InlineKeyboardButton("🇵🇪 Yape", callback_data="yape"),
+            InlineKeyboardButton("🌎 PayPal", callback_data="paypal"),
         ]
     ])
 
@@ -52,10 +52,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     mensaje = (
         "🔥 *Bienvenido a Mundo VIP* 🔥\n\n"
-        "Aquí obtendrás acceso exclusivo con contenido premium actualizado constantemente.\n\n"
+        "Aquí obtendrás acceso exclusivo con contenido VIP actualizado constantemente.\n\n"
         "💎 Acceso permanente\n"
         "🔒 Grupo privado\n"
-        "⚡ Activación rápida\n\n"
+        "🔒 100% respaldado y libre de caidas\n"
+        "⚠️ Si eres sensible mejor ni ingreses\n\n"
+        "💀 El mejor contenido prohibido de todo Telegram solo en nuestro VIP \n\n"
+        "✅ Dormidas Reales\n\n"
+        "✅ Borrachas\n\n"
+        "✅ Violads 100% reales\n\n"
+        "✅ Colegialas\n\n"
+        "✅ Chibolitas\n\n"
+        "✅ Espiadas\n\n"
+        "✅ Omegle\n\n"
+        "✅ Trios y Cornudos\n\n"
+        "✅ Famosas Peruanas\n\n"
+        "✅ Streamers e influencers\n\n"
+        "✅ OnlyFans\n\n"
+        "✅ Sexmex\n\n"
+        "✅ Packs Filtrados reales\n\n"
+        "✅ Packs Filtrados reales\n\n"
+        "Es un unico Pago"
         "Selecciona tu método de pago para continuar:"
     )
 
@@ -277,4 +294,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
