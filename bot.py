@@ -17,6 +17,7 @@ from telegram.ext import (
 # =========================
 
 TOKEN = os.getenv("TOKEN")
+print("TOKEN CARGADO:", TOKEN)
 VIP_GROUP_ID = -1003665882219
 ADMIN_GROUP_ID = -1003773189699
 
@@ -276,3 +277,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
