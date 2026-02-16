@@ -53,10 +53,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     mensaje = (
         "🔥 *Bienvenido a Mundo VIP* 🔥\n\n"
-        "Accede a nuestro contenido exclusivo actualizado constantemente.\n\n"
+        "Accede al mejor contenido exclusivo VIP de todo internet actualizado constantemente.\n\n"
+        "⚠️ Si eres sen sensible mejor ni ingreses\n"
         "💎 Acceso permanente\n"
         "🔒 Grupo privado\n"
-        "⚡ Activación rápida\n\n"
+        "⚡ Con respaldo y libre de caidas\n\n"
         "💷 Pago único\n\n"
         "👇 Selecciona tu método de pago para continuar:"
     )
@@ -269,3 +270,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
